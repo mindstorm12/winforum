@@ -21,6 +21,9 @@ def index(request):
 
     return render(request,"home/index.html", contextCategory)
 
+def post_list(request):
+    return render(request, "home/post_list.html")
+
 
 
 
