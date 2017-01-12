@@ -34,7 +34,7 @@ def forum_posts(request, forum_id):
     contextCategory = {'forumTitleList': forumTitleList, 'forumPostList': forumPostList
                        , 'forumSubCategoryList': forumSubCategoryList}
 
-    return render(request,"home/forumPosts.html", contextCategory)
+    return render(request,"home/forumposts.html", contextCategory)
 
 def post_messages(request, post_id):
     forumPostMessages = thread.objects.filter(idForumPost__id = post_id)
