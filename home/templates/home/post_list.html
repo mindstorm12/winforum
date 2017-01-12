@@ -1,17 +1,10 @@
-<html>
-    <head>
-        <title>Winnipeg Forums List</title>
-    </head>
-    <body>
-        <div>
-            <h1><a href="">Blog</a></h1>
-        </div>
-    <div>
-        {% for q in posts %}
-            <li>{{ q.title }} : {{ q.content_text }}</li>
-        {% endfor %}
-    </div>
-
-
-    </body>
-</html>
+{% extends 'home/base.html' %}
+    {% block content %}
+<div>
+    <p>
+            {% for q in posts %}
+                        <li>{{ q.title }} : {{ q.content_text }}</li>
+            {% endfor %}
+    </p>
+    {% endblock %}
+</div>
