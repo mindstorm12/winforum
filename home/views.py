@@ -1,11 +1,11 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.http import Http404
-from forums.models import forumCategory, forumPost, forumSubCategory,thread
+from forums.models import forumCategory, forumPost, forumSubCategory,thread, user
 
 from django.views.decorators.csrf import requires_csrf_token
 
-from home.forms import UserNameForm
+from home.forms import UserNameForm, PostForm
 from django.http import HttpResponseRedirect
 
 forumTitleList = forumCategory.objects.all()
@@ -64,6 +64,35 @@ def get_username(request):
     return render(request,'home/signin.html', {
         'form': form,
     })
+
+def post_new(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+    else:
+        form = PostForm()
+
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.idUser = user.objects.get(pk=1)
+        post.forumSubCategory = forumSubCategory.objects.get (pk=1)
+        post.publish()
+        post.save()
+        return redirect('post_list')
+
+    return render(request, 'home/post_edit.html', {'form': form})
+
+def post_edit(request, pk):
+    post = get_object_or_404(forumPost, pk=pk)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.publish()
+            return redirect('post_list')
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'home/post_edit.html', {'form': form})
 
 
 
