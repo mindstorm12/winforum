@@ -23,7 +23,10 @@ def index(request):
 
 def post_list(request):
     posts  = forumPost.objects.all()
-    context = {'posts':posts}
+    if request.user.is_authenticated():
+        context = {'posts': posts, 'username':request.user}
+    else:
+        context = {'posts':posts}
     return render(request, "home/post_list.html", context)
 
 
