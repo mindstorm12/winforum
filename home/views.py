@@ -5,8 +5,12 @@ from forums.models import forumCategory, forumPost, forumSubCategory,thread, use
 
 from django.views.decorators.csrf import requires_csrf_token
 
-from home.forms import UserNameForm, PostForm
+from home.forms import UserNameForm, PostForm, Signupform
 from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.core.context_processors import csrf
+from django.contrib.auth import login, logout
 
 forumTitleList = forumCategory.objects.all()
 forumSubCategoryList = forumSubCategory.objects.all()
@@ -68,6 +72,52 @@ def get_username(request):
         'form': form,
     })
 
+
+
+def signlog_in(request):
+    if request.method == "POST":
+        form = UserNameForm(request.POST)
+    else:
+        form = UserNameForm()
+
+    if form.is_valid():
+        denizen = form.save(commit=False)
+
+        if User.objects.get(username=denizen.username):
+                user = authenticate(username=denizen.username, password=denizen.userpassword)
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+
+                    else:
+                        return HttpResponse("Bad request")
+                return redirect('post_list')
+    return render(request, 'home/post_edit.html', {'form': form})
+
+def sign_up(request):
+    if request.method == "POST":
+        form = Signupform(request.POST)
+    else:
+        form = Signupform()
+
+    if form.is_valid():
+        denizen = form.save(commit=False)
+
+        user = User.objects.create_user(denizen.username, denizen.useremail, denizen.userpassword)
+        user.save()
+
+        if User.objects.get(username=denizen.username):
+            user = authenticate(username=denizen.username, password=denizen.userpassword)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+
+                else:
+                    return HttpResponse("Bad request")
+            return redirect('post_list')
+    return render(request, 'home/post_edit.html', {'form': form})
+
+
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -97,6 +147,9 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
     return render(request, 'home/post_edit.html', {'form': form})
 
+def log_out(request):
+    logout(request)
+    return redirect('post_list')
 
 
 
