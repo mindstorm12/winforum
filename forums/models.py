@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 
 class forumCategory(models.Model):
 
@@ -34,7 +36,7 @@ class user(models.Model):
 
 class forumPost(models.Model):
     forumSubCategory = models.ForeignKey(forumSubCategory, on_delete = models.CASCADE)
-    idUser = models.ForeignKey(user,on_delete=models.CASCADE)
+    idUser = models.ForeignKey(User,on_delete=models.CASCADE)
     title = models.CharField(max_length = 90)
     content_text = models.CharField(max_length = 500)
     date_stamp = models.DateTimeField('date published')
@@ -48,16 +50,17 @@ class forumPost(models.Model):
 
 
 class thread(models.Model):
-    idUser = models.ForeignKey(user, on_delete=models.CASCADE)
+    idUser = models.ForeignKey(User, on_delete=models.CASCADE)
     idForumPost = models.ForeignKey(forumPost, on_delete = models.CASCADE)
-    content_text = models.CharField(max_length=500)
-
+    content_text = models.CharField(max_length = 500)
     date_stamp = models.DateTimeField('date posted')
 
+    def publish(self):
+        self.date_stamp = timezone.now()
+        self.save()
+
     def __str__(self):
-        return self.idUser.username
-
-
+        return self.content_text
 
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from forums.models import forumPost, user
+from forums.models import forumPost, user, thread
 
 class UserNameForm(forms.ModelForm):
 
@@ -19,3 +19,14 @@ class Signupform(forms.ModelForm):
         model = user
         fields = ('username', 'userpassword', 'useremail')
 
+class ReplyForm(forms.ModelForm):
+
+    class Meta:
+        model = thread
+        fields = ('content_text' ,)
+
+class SearchForm(forms.ModelForm):
+
+    class Meta:
+        model = thread
+        fields = ('content_text' ,)

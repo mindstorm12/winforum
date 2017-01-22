@@ -5,64 +5,82 @@ from forums.models import forumCategory, forumPost, forumSubCategory,thread, use
 
 from django.views.decorators.csrf import requires_csrf_token
 
-from home.forms import UserNameForm, PostForm, Signupform
+from home.forms import UserNameForm, PostForm, Signupform, ReplyForm, SearchForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from django.core.context_processors import csrf
 from django.contrib.auth import login, logout
 
 forumTitleList = forumCategory.objects.all()
 forumSubCategoryList = forumSubCategory.objects.all()
+searchForm = SearchForm()
 
 
 
 def index(request):
-    forumTitleList = forumCategory.objects.all()
-    forumPostList = forumSubCategory.objects.all()[:5]
-
-    contextCategory = {'forumTitleList': forumTitleList, 'forumPostList': forumPostList}
+    contextCategory = {'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList, 'searchForm': searchForm}
 
     return render(request,"home/index.html", contextCategory)
 
+#list of forum topics along with the ones that can be edited
 def post_list(request):
     posts  = forumPost.objects.all()
     if request.user.is_authenticated():
-        context = {'posts': posts, 'username':request.user}
+        context = {'posts': posts, 'username':request.user, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
     else:
-        context = {'posts':posts}
+        context = {'posts':posts, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
     return render(request, "home/post_list.html", context)
 
 
 
-
+#listing forumSubcats
 def forum_posts(request, forum_id):
-    forumPostList = forumPost.objects.filter(forumSubCategory__id = forum_id)
+    forumPostList = forumPost.objects.filter(forumSubCategory__idForumCategory= forum_id)
+    forumSubCategoryList = forumSubCategory.objects.filter(idForumCategory__id = forum_id)
     contextCategory = {'forumTitleList': forumTitleList, 'forumPostList': forumPostList
                        , 'forumSubCategoryList': forumSubCategoryList}
 
     return render(request,"home/forumposts.html", contextCategory)
 
+#forum topics
 def post_messages(request, post_id):
-    forumPostMessages = thread.objects.filter(idForumPost__id = post_id)
-    contextCategory = {'forumPostMessages' : forumPostMessages}
+
+    forumPostMessages = forumPost.objects.filter(forumSubCategory__id = post_id)
+    contextCategory = {'forumPostMessages' : forumPostMessages, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
 
     return render(request,"home/postpage.html", contextCategory)
 
+#forum topics
+def thread_view(request, post_id):
+
+    threadList = thread.objects.filter(idForumPost__id = post_id)
+
+    if request.method == "POST":
+        form = ReplyForm(request.POST)
+    else:
+        form = ReplyForm()
+
+    if form.is_valid():
+        threadreply = form.save(commit=False)
+        threadreply.idForumPost=forumPost(pk=post_id)
+        threadreply.idUser = request.user
+        threadreply.publish()
+        threadreply.save()
+
+    contextCategory = {'threadList' : threadList, 'form':form, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
+
+    return render(request,"home/threadpage.html", contextCategory)
 
 
 def get_username(request):
     if request.method == 'POST':  # If the form has been submitted...
         form = UserNameForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
             username = request.emailaddress
             password =request.password
 
 
-            context = {'username':username, 'password':password}
+            context = {'username':username, 'password':password, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
             return render(request,'home/signin.html', context)
 
     else:
@@ -94,6 +112,7 @@ def signlog_in(request):
                 return redirect('post_list')
     return render(request, 'home/post_edit.html', {'form': form})
 
+#signing up new user view
 def sign_up(request):
     if request.method == "POST":
         form = Signupform(request.POST)
@@ -117,16 +136,19 @@ def sign_up(request):
             return redirect('post_list')
     return render(request, 'home/post_edit.html', {'form': form})
 
-
+#adding a new post view
 def post_new(request):
+    current_user = request.user
     if request.method == "POST":
         form = PostForm(request.POST)
+
     else:
         form = PostForm()
 
     if form.is_valid():
         post = form.save(commit=False)
-        post.idUser = user.objects.get(pk=1)
+        post.idUser = User.objects.get(username=current_user.username)
+
         post.forumSubCategory = forumSubCategory.objects.get (pk=1)
         post.publish()
         post.save()
@@ -134,6 +156,7 @@ def post_new(request):
 
     return render(request, 'home/post_edit.html', {'form': form})
 
+#list of posts that can be edited
 def post_edit(request, pk):
     post = get_object_or_404(forumPost, pk=pk)
     if request.method == "POST":
@@ -146,6 +169,21 @@ def post_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'home/post_edit.html', {'form': form})
+
+#search results
+def post_search(request):
+
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            searchItem = form.save(commit=False)
+            searchResults = thread.objects.filter(content_text__contains=searchItem.content_text)
+            context = {'posts': searchResults, 'username':request.user, 'forumTitleList': forumTitleList, 'forumPostList':
+                forumSubCategoryList}
+            return render(request, "home/post_list.html", context)
+
+        else:
+            return redirect('index')
 
 def log_out(request):
     logout(request)

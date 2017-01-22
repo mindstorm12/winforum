@@ -31,8 +31,9 @@
 
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet"  href="{% static 'home/starter-template.css' %}"
-          >
+    <link rel="stylesheet"
+          href="{% static 'home/starter-template.css' %}"
+    >
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -58,7 +59,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand"
-               href="">Winnipeg Forums</a>
+               href="{% url 'index' %}">Winnipeg Forums</a>
         </div>
         <div id="navbar"
              class="collapse navbar-collapse">
@@ -71,80 +72,61 @@
                        aria-haspopup="true"
                        aria-expanded="false">Boards<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Central</a></li>
-                        <li><a href="#">Winter</a></li>
-                        <li><a href="#">Buy and Sell</a></li>
+                        {% for q in forumTitleList%}
+                            <li><a href="{% url 'forum_posts' q.id %}">{{ q }}</a></li>
+                        {% endfor %}
+
 
                     </ul>
                 </li>
-                <li><a href="#contact">About</a></li>
-                <form action="/login/" method = 'post' class="navbar-form navbar-left">
-                                            {% csrf_token %}
+                <form action="/searchpage/"
+                      method='post'
+                      class="navbar-form navbar-left">
+                    {% csrf_token %}
 
-                    <div class="form-group">
-                        <input type="text"
-                               class="form-control"
-                               placeholder="Search">
-                    </div>
+                    {{ searchForm }}
                     <button type="submit"
                             class="btn btn-default"><span class="glyphicon glyphicon-search"
                                                           aria-hidden="true"></span></button>
 
                 </form>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'post_new' %}" class="top-menu">Welcome {{ request.user }}
-                        <span class="glyphicon glyphicon-plus"></span></a>
-                    <form action="/logout/" method = 'post' class="navbar-form navbar-left">
-                                            {% csrf_token %}
+                <a href="{% url 'post_new' %}"
+                   class="top-menu">Welcome {{ request.user }}
+                    <span class="glyphicon glyphicon-plus"></span></a>
+                <form action="/logout/"
+                      method='post'
+                      class="navbar-form navbar-left">
+                    {% csrf_token %}
 
 
                     <button type="submit"
-                            class="btn btn-default">Logout</button>
+                            class="btn btn-default">Logout
+                    </button>
 
                 </form>
 
                 {% else %}
 
-                    <form   action="/login/" method= 'post'
-                            class="navbar-form navbar-right">
-                            {% csrf_token %}
+                <form action="/login/"
+                      method='post'
+                      class="navbar-form navbar-right">
+                    {% csrf_token %}
 
-                        <label for="inputEmail"
-                               class="sr-only">Email address</label>
-                        <input type="text"
-                               name="emailaddress"
-                               id="inputEmail"
-                               class="form-control"
-                               placeholder="Email address"
-                               value="{{ username }}"
-                               required autofocus>
-                        <label for="inputPassword"
-                               class="sr-only">Password</label>
-                        <input type="password"
-                               id="inputPassword"
-                               class="form-control"
-                               placeholder="Password"
-                               value ='{{ password }}' required>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       value="remember-me">Remember</label>
-                        </div>
+                    <button type="submit"
+                            class="btn btn-default">Sign in <span class="glyphicon glyphicon-user"
+                                                                 aria-hidden="true"></span></button>
+                </form>
+                <form action="/signin/"
+                      method='post'
+                      class="navbar-form navbar-right">
+                    {% csrf_token %}
                         <button type="submit"
-                                class="btn btn-default"><span class="glyphicon glyphicon-user"
-                                                              aria-hidden="true"></span></button>
-                    </form>
-                    <form   action="/signin/" method= 'post'
-                            class="navbar-form navbar-right">
-                            {% csrf_token %}
+                            class="btn btn-default">Sign Up <span class="glyphicon glyphicon-user"
+                                                                 aria-hidden="true"></span></button>
+                </form>
 
-
-                        <button type="submit"
-                                class="btn btn-default">Sign Up<span class="glyphicon glyphicon-user"
-                                                              aria-hidden="true"></span></button>
-                    </form>
-
-                    </form>
+                </form>
                 {% endif %}
 
 
@@ -154,14 +136,14 @@
 </nav>
 
 <div class="content container">
-        <div class="row">
-            <div class="col-md-8">
+    <div class="row">
+        <div class="col-md-8">
 
 
             {% block content %}
             {% endblock %}
-            </div>
         </div>
+    </div>
 </div>
 
 <!-- Bootstrap core JavaScript
