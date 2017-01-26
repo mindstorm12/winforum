@@ -25,7 +25,7 @@ SECRET_KEY = '+terybt$c)%qbky61&^9go92!o&(%!v9*z%+og!+1w8g5=+)58'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mindstorm.pythonanywhere.com']
 
 
 # Application definition
