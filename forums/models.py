@@ -21,9 +21,9 @@ class forumSubCategory(models.Model):
         return self.title
 
 class user(models.Model):
-    username = models.CharField(max_length=16, unique = True)
-    userpassword = models.CharField(max_length=128)
-    useremail = models.CharField(max_length=128)
+    username = models.CharField('Username',max_length=16, unique = True)
+    userpassword = models.CharField('Password',max_length=128)
+    useremail = models.CharField('E-mail',max_length=128)
     userdate = models.DateTimeField('date registered')
     userDob = models.DateTimeField('date of birth')
 

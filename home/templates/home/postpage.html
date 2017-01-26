@@ -2,9 +2,14 @@
     {% block content %}
 
  {% if forumPostMessages %}
+
+    <h2>{{ title }}<hr /></h2>
+
         <ul>
         {% for q in forumPostMessages %}
-            <li><a href="{% url 'thread_view' post_id=q.pk %}"> {{ q.idUser.username }} : {{ q.title }} :
+            <li><span class="glyphicon glyphicon-comment"
+                                                          aria-hidden="true"></span>
+                <a href="{% url 'thread_view' post_id=q.pk %}"> {{ q.idUser.username }} : {{ q.title }} :
                 {{ q.content_text }}</a>
             {% if user.is_authenticated %}
                 {% if user == q.idUser %}

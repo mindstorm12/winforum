@@ -2,26 +2,31 @@
 
 {% block content %}
     {% if forumTitleList %}
-    <h2>Hot Forums<hr /></h2>
+    <h2>Boards<hr /></h2>
     <div>
         {% for q in forumTitleList %}
-        <ul>
-            <li>
-                <a href="{% url 'forum_posts' q.id %}">{{ q.title }}</a>
-            </li>
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'forum_posts' q.id %}">{{ q.title }}</a>
+                </div>
+            </div>
 
             {% if forumPostList %}
                 <ul>
                     {% for i in forumPostList %}
                         {% if i.idForumCategory.id == q.id %}
                             <li>
+                                <span class="glyphicon glyphicon-th-list"
+                                                          aria-hidden="true"></span>
                                 <a href="{% url 'post_messages' i.id %}">{{ i.title }} </a>
                             </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
 
-        </ul>
+
             {% endif %}
         {% endfor %}
     </div>

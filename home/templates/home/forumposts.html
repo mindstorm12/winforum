@@ -1,14 +1,35 @@
 {% extends 'home/base.html' %}
 
 {% block content %}
+
+
+    <h2>{{ title }}<hr /></h2>
+
     {% if forumSubCategoryList %}
-        <ul>
+
         {% for q in forumSubCategoryList %}
 
-            <li><a href="{% url 'post_messages' q.id %}">{{ q.title }} </a></li>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'post_messages' q.id %}">{{ q.title }}</a>
+                </div>
+            </div>
+            <ul>
+            {% if forumPostList %}
+                    {% for i in forumPostList %}
+                        {% if i.forumSubCategory.pk == q.pk %}
+                            <li>
+                                <span class="glyphicon glyphicon-th-list"
+                                                          aria-hidden="true"></span>
+                                <a href="{% url 'thread_view' i.id %}">{{ i.title }} </a>
+                            </li>
+                        {% endif %}
 
+                    {% endfor %}
+                {% endif %}
+                </ul>
         {% endfor %}
-        </ul>
+
     {% else %}
         <p>No Forums are available.</p>
     {% endif %}
