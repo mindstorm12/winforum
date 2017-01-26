@@ -1,7 +1,9 @@
 from django import forms
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, PasswordInput
 from forums.models import forumPost, user, thread
 from django.utils.translation import ugettext_lazy as _
+from captcha.fields import CaptchaField
+
 
 
 class UserNameForm(forms.ModelForm):
@@ -9,6 +11,9 @@ class UserNameForm(forms.ModelForm):
     class Meta:
         model = user
         fields = ('username', 'userpassword',)
+        widget = {
+         'userpassword' : PasswordInput(),
+        }
 
 class PostForm(forms.ModelForm):
 
@@ -25,10 +30,12 @@ class PostForm(forms.ModelForm):
 
 
 class Signupform(forms.ModelForm):
+    captcha = CaptchaField()
 
     class Meta:
         model = user
         fields = ('username', 'userpassword', 'useremail')
+
 
 class ReplyForm(forms.ModelForm):
 

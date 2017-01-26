@@ -23,5 +23,7 @@ urlpatterns = [
     url(r'^forums/', include('forums.urls')),
     url(r'^home/', include('home.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^captcha/', include('captcha.urls')),
+
 ]
 
