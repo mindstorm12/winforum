@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
+from axes.decorators import watch_login
 
 forumTitleList = forumCategory.objects.all()
 forumSubCategoryList = forumSubCategory.objects.all()
@@ -81,20 +82,23 @@ def thread_view(request, post_id):
         threadreply.publish()
         threadreply.save()
     contextCategory = contextDefault.copy()
-    contextCategory.update({'threadList' : threadList, 'form':form})
+    contextCategory.update({'threadList' : threadList, 'form':form, 'current_path' : get_current_path(request)})
     #{'threadList' : threadList, 'form':form, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
 
     return render(request,"home/threadpage.html", contextCategory)
 
 #signing in an existing user
+@watch_login
 def signlog_in(request):
     if request.method == "POST":
-        form = UserNameForm(request.POST)
+        form = UserNameForm(request.POST, )
+
     else:
         form = UserNameForm()
 
     if form.is_valid():
         denizen = form.save(commit=False)
+
 
         if User.objects.get(username=denizen.username):
                 user = authenticate(username=denizen.username, password=denizen.userpassword)
@@ -113,12 +117,20 @@ def signlog_in(request):
 #signing up new user view
 def sign_up(request):
     if request.method == "POST":
-        form = Signupform(request.POST)
+        form = Signupform(request.POST, request.FILES)
     else:
         form = Signupform()
 
     if form.is_valid():
         denizen = form.save(commit=False)
+
+        denizen.avatar = form.cleaned_data["avatar"]
+
+        denizen.save()
+
+        #m.model_pic = form.cleaned_data['image']
+        #m.save()
+
 
         user = User.objects.create_user(denizen.username, denizen.useremail, denizen.userpassword)
         user.save()
@@ -166,6 +178,7 @@ def post_edit(request, pk):
             post = form.save(commit=False)
             post.author = request.user
             post.publish()
+            post.edited = True
             return redirect('post_list')
     else:
         form = PostForm(instance=post)
@@ -191,6 +204,19 @@ def post_search(request):
 def log_out(request):
     logout(request)
     return redirect('index')
+
+
+#getting current path
+def get_current_path(request):
+    return request.get_full_path()
+
+
+#getting current path
+def profile_view(request):
+    context = contextDefault.copy()
+    context.update({'username': request.user, 'password': request.user.password,})
+    return render(request, "home/profile.html", context)
+
 
 
 

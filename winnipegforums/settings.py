@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'captcha'
+    'captcha',
+    'axes',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -132,3 +133,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+#profile images will be stored here
+USER_IMAGE_PATH = '/site_media/user_data/images/'
+AXES_COOLOFF_TIME = .017

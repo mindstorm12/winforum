@@ -3,17 +3,17 @@ from django.forms import ModelForm, Textarea, PasswordInput
 from forums.models import forumPost, user, thread
 from django.utils.translation import ugettext_lazy as _
 from captcha.fields import CaptchaField
+from django.core.files.images import get_image_dimensions
 
 
 
 class UserNameForm(forms.ModelForm):
 
+    userpassword = forms.CharField(max_length=32, widget=forms.PasswordInput)
     class Meta:
         model = user
-        fields = ('username', 'userpassword',)
-        widget = {
-         'userpassword' : PasswordInput(),
-        }
+        fields = ('username','userpassword')
+
 
 class PostForm(forms.ModelForm):
 
@@ -31,10 +31,10 @@ class PostForm(forms.ModelForm):
 
 class Signupform(forms.ModelForm):
     captcha = CaptchaField()
-
+    avatar = forms.ImageField()
     class Meta:
         model = user
-        fields = ('username', 'userpassword', 'useremail')
+        fields = ('username', 'userpassword', 'useremail','avatar')
 
 
 class ReplyForm(forms.ModelForm):

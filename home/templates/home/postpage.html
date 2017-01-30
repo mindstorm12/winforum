@@ -11,6 +11,9 @@
                                                           aria-hidden="true"></span>
                 <a href="{% url 'thread_view' post_id=q.pk %}"> {{ q.idUser.username }} : {{ q.title }} :
                 {{ q.content_text }}</a>
+                {% if q.edited %}
+                <p>This is an edited Post</p>
+                {% endif %}
             {% if user.is_authenticated %}
                 {% if user == q.idUser %}
 

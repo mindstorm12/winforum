@@ -4,7 +4,7 @@
  {% if threadList %}
         <ul>
         {% for q in threadList %}
-            <li>{{ q.idUser.username }} : {{ q.content_text }}
+            <li>{{ q.idUser.avatar }}|{{ q.idUser.username }} : {{ q.content_text }}
             {% if user.is_authenticated %}
                 {% if user == q.idUser %}
                             <a class="btn btn-default" href="">Edit Post</a>
@@ -22,8 +22,16 @@
         <form method="POST" class="post-form">
             {% csrf_token %}
             {{ form.as_p }}
+
         <input type="submit" value="Submit" />
+
+
         </form>
+
+        <div class="fb-share-button"
+             data-href="{{ current_path }}" data-layout="button" data-size="small" data-mobile-iframe="true"><a
+                class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A8000%2Fhome%2Fthreads%2F9%2F&amp;src=sdkpreparse">Share</a></div>
+
         {% endif %}
 
     {% endblock %}

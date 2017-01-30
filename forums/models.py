@@ -3,7 +3,12 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
+
+
+fs = FileSystemStorage(location=settings.USER_IMAGE_PATH)
 
 class forumCategory(models.Model):
 
@@ -21,11 +26,14 @@ class forumSubCategory(models.Model):
         return self.title
 
 class user(models.Model):
+    #user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField('Username',max_length=16, unique = True)
     userpassword = models.CharField('Password',max_length=128)
     useremail = models.CharField('E-mail',max_length=128)
-    userdate = models.DateTimeField('date registered')
-    userDob = models.DateTimeField('date of birth')
+    userdate = models.DateTimeField('date registered', null=True)
+    userDob = models.DateTimeField('date of birth', null=True)
+
+    avatar = models.ImageField(upload_to= 'images', null=True, blank=True)
 
     def __str__(self):
         return self.username
@@ -54,6 +62,7 @@ class thread(models.Model):
     idForumPost = models.ForeignKey(forumPost, on_delete = models.CASCADE)
     content_text = models.CharField(max_length = 500)
     date_stamp = models.DateTimeField('date posted')
+    edited = models.BooleanField(default=False)
 
     def publish(self):
         self.date_stamp = timezone.now()

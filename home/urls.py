@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
+from axes.decorators import watch_login
 
 urlpatterns = [
     url(r'^$',views.index, name = 'index'),
@@ -14,6 +15,7 @@ urlpatterns = [
     url(r'^signin/$', views.sign_up, name='sign_up'),
     url(r'^logout/$', views.log_out, name='log_out'),
     url(r'^searchpage/$', views.post_search, name='post_search'),
+    url(r'^profile/$', views.profile_view, name='profile_view'),
 
 
 ]
