@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -26,18 +27,29 @@ class forumSubCategory(models.Model):
         return self.title
 
 class user(models.Model):
-    #user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField('Username',max_length=16, unique = True)
-    userpassword = models.CharField('Password',max_length=128)
-    useremail = models.CharField('E-mail',max_length=128)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
+
+    username = models.CharField('Username', max_length=90)
+    userpassword = models.CharField('Password', max_length=90)
     userdate = models.DateTimeField('date registered', null=True)
     userDob = models.DateTimeField('date of birth', null=True)
+    useremail = models.EmailField('E-mail', null=True)
 
     avatar = models.ImageField(upload_to= 'images', null=True, blank=True)
 
     def __str__(self):
         return self.username
 
+#cleaned up usermodel
+class forum_user(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    user_dob = models.DateTimeField('date of birth', null=True)
+    avatar = models.ImageField(upload_to='images', null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 
@@ -70,12 +82,3 @@ class thread(models.Model):
 
     def __str__(self):
         return self.content_text
-
-
-
-
-
-
-
-
-

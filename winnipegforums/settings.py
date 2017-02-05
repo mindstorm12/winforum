@@ -134,6 +134,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+#user uploaded media will be saved here
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 #profile images will be stored here
 USER_IMAGE_PATH = '/site_media/user_data/images/'
 AXES_COOLOFF_TIME = .017
+
+#changing login redirect URL
+LOGIN_REDIRECT_URL = 'index'

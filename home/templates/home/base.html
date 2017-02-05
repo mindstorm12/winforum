@@ -123,8 +123,9 @@ Facebook share stuff trial ends
 
                 {% else %}
 
+
+
                 <form action="/login/"
-                      method='post'
                       class="navbar-form navbar-right">
                     {% csrf_token %}
 
@@ -133,7 +134,6 @@ Facebook share stuff trial ends
                                                                  aria-hidden="true"></span></button>
                 </form>
                 <form action="/signin/"
-                      method='post'
                       class="navbar-form navbar-right">
                     {% csrf_token %}
                         <button type="submit"

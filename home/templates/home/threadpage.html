@@ -1,22 +1,23 @@
 {% extends 'home/base.html' %}
     {% block content %}
 
+<h2>{{ mainPost.title }}</h2>
+<p>{{ mainPost.content_text }}</p>
+
  {% if threadList %}
         <ul>
         {% for q in threadList %}
-            <li>{{ q.idUser.avatar }}|{{ q.idUser.username }} : {{ q.content_text }}
-            {% if user.is_authenticated %}
-                {% if user == q.idUser %}
-                            <a class="btn btn-default" href="">Edit Post</a>
-                {% endif %}
-            {% endif %}
+
+            <li>
+                <img src="{{ q.idUser.user.avatar.url }}" width = "240" alt="My image" />
+                |{{ q.idUser.username }} : {{ q.content_text }}
             </li>
 
         {% endfor %}
         </ul>
 
         {% else %}
-        <p>No Forums are available.</p>
+        <p>No replies yet</p>
         {% endif %}
         {% if user.is_authenticated %}
         <form method="POST" class="post-form">

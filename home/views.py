@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from axes.decorators import watch_login
+from django.contrib.auth.decorators import login_required
 
 forumTitleList = forumCategory.objects.all()
 forumSubCategoryList = forumSubCategory.objects.all()
@@ -69,6 +70,10 @@ def post_messages(request, post_id):
 def thread_view(request, post_id):
 
     threadList = thread.objects.filter(idForumPost__id = post_id)
+    mainPost = forumPost.objects.get(pk=post_id)
+
+
+    contextCategory = contextDefault.copy()
 
     if request.method == "POST":
         form = ReplyForm(request.POST)
@@ -81,26 +86,37 @@ def thread_view(request, post_id):
         threadreply.idUser = request.user
         threadreply.publish()
         threadreply.save()
-    contextCategory = contextDefault.copy()
-    contextCategory.update({'threadList' : threadList, 'form':form, 'current_path' : get_current_path(request)})
+
+
+    contextCategory.update({'threadList' : threadList,
+                            'form':form,
+                            'current_path' : get_current_path(request),
+                            'mainPost' : mainPost,
+                            })
     #{'threadList' : threadList, 'form':form, 'forumTitleList': forumTitleList, 'forumPostList': forumSubCategoryList}
 
     return render(request,"home/threadpage.html", contextCategory)
 
+#a different sign in form
+@login_required
+def home(request):
+    context = contextDefault.copy()
+    title = 'Please Log in'
+    context.update({'title': title,})
+    return render(request, 'registration/login.html', context)
+
+
 #signing in an existing user
 @watch_login
 def signlog_in(request):
+
     if request.method == "POST":
         form = UserNameForm(request.POST, )
 
-    else:
-        form = UserNameForm()
+        if form.is_valid():
+            denizen = form.save(commit=False)
 
-    if form.is_valid():
-        denizen = form.save(commit=False)
-
-
-        if User.objects.get(username=denizen.username):
+            if User.objects.get(username=denizen.username):
                 user = authenticate(username=denizen.username, password=denizen.userpassword)
                 if user is not None:
                     if user.is_active:
@@ -109,6 +125,11 @@ def signlog_in(request):
                     else:
                         return HttpResponse("Bad request")
                 return redirect('index')
+
+    else:
+        form = UserNameForm()
+
+
     context = contextDefault.copy()
     title = 'Please Log in'
     context.update({'title':title, 'form': form})
@@ -116,34 +137,40 @@ def signlog_in(request):
 
 #signing up new user view
 def sign_up(request):
+
     if request.method == "POST":
+
         form = Signupform(request.POST, request.FILES)
+
+        if form.is_valid():
+            denizen = form.save(commit=False)
+
+            denizen.avatar = form.cleaned_data["avatar"]
+
+            denizen.save()
+
+            #m.model_pic = form.cleaned_data['image']
+            #m.save()
+
+
+            user = User.objects.create_user(denizen.username, denizen.useremail, denizen.userpassword)
+            user.save()
+            denizen.user = user
+            denizen.save()
+
+            if User.objects.get(username=denizen.username):
+                user = authenticate(username=denizen.username, password=denizen.userpassword)
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+
+                    else:
+                        return HttpResponse("Bad request")
+                return redirect('index')
+
     else:
         form = Signupform()
 
-    if form.is_valid():
-        denizen = form.save(commit=False)
-
-        denizen.avatar = form.cleaned_data["avatar"]
-
-        denizen.save()
-
-        #m.model_pic = form.cleaned_data['image']
-        #m.save()
-
-
-        user = User.objects.create_user(denizen.username, denizen.useremail, denizen.userpassword)
-        user.save()
-
-        if User.objects.get(username=denizen.username):
-            user = authenticate(username=denizen.username, password=denizen.userpassword)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-
-                else:
-                    return HttpResponse("Bad request")
-            return redirect('index')
     context = contextDefault.copy()
     title = 'Please sign up using the form below'
     context.update({'title': title, 'form': form})
@@ -214,8 +241,9 @@ def get_current_path(request):
 #getting current path
 def profile_view(request):
     context = contextDefault.copy()
-    context.update({'username': request.user, 'password': request.user.password,})
+    context.update({'username': request.user, 'avatar':request.user.user.avatar.url,})
     return render(request, "home/profile.html", context)
+
 
 
 
