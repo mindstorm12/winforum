@@ -113,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -141,7 +140,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'media')
 
 #profile images will be stored here
 USER_IMAGE_PATH = '/site_media/user_data/images/'
-AXES_COOLOFF_TIME = .017
+AXES_COOLOFF_TIME = .083
 
 #changing login redirect URL
 LOGIN_REDIRECT_URL = 'index'

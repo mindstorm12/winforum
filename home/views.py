@@ -109,6 +109,8 @@ def home(request):
 #signing in an existing user
 @watch_login
 def signlog_in(request):
+    if request.user.is_authenticated():
+        return redirect('index')
 
     if request.method == "POST":
         form = UserNameForm(request.POST, )
@@ -137,6 +139,8 @@ def signlog_in(request):
 
 #signing up new user view
 def sign_up(request):
+    if request.user.is_authenticated():
+        return redirect('index')
 
     if request.method == "POST":
 
@@ -146,6 +150,8 @@ def sign_up(request):
             denizen = form.save(commit=False)
 
             denizen.avatar = form.cleaned_data["avatar"]
+
+            denizen.username = denizen.username.lower()
 
             denizen.save()
 
@@ -178,6 +184,10 @@ def sign_up(request):
 
 #adding a new post view
 def post_new(request):
+    if not request.user.is_authenticated():
+        return redirect('signlog_in')
+
+
     current_user = request.user
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -198,6 +208,8 @@ def post_new(request):
 
 #list of posts that can be edited
 def post_edit(request, pk):
+
+
     post = get_object_or_404(forumPost, pk=pk)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -240,6 +252,9 @@ def get_current_path(request):
 
 #getting current path
 def profile_view(request):
+    if not request.user.is_authenticated():
+        return redirect('signlog_in')
+
     context = contextDefault.copy()
     context.update({'username': request.user, 'avatar':request.user.user.avatar.url,})
     return render(request, "home/profile.html", context)

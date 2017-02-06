@@ -1,6 +1,7 @@
 {% extends 'home/base.html' %}
     {% block content %}
-
+<p></p>
+<h1>Please login</h1>
      <form action="/login/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
                 {{ form.as_p }}
