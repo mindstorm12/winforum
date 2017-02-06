@@ -32,7 +32,46 @@ class PostForm(forms.ModelForm):
 
 class Signupform(forms.ModelForm):
     captcha = CaptchaField()
-    avatar = forms.ImageField()
+
+
+    #experimenting image
+    def clean_avatar(self):
+        avatar = self.cleaned_data['avatar']
+
+        try:
+            w, h = get_image_dimensions(avatar)
+
+            # validate dimensions
+            max_width = max_height = 512
+            if w > max_width or h > max_height:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                    '%s x %s pixels or smaller.' % (max_width, max_height))
+
+            # validate content type
+            main, sub = avatar.content_type.split('/')
+            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
+                raise forms.ValidationError(u'Please use a JPEG, '
+                                            'GIF or PNG image.')
+
+            # validate file size
+            if len(avatar) > (20 * 1024 * 1024):
+                raise forms.ValidationError(
+                    u'Avatar file size may not exceed 20k.')
+
+        except AttributeError:
+            """
+            Handles case when we are updating the user profile
+            and do not supply a new avatar
+            """
+            pass
+
+        return avatar
+
+    #end of image upload
+
+    #avatar = forms.ImageField()
+    #avatar = clean_avatar()
     class Meta:
         model = user
         fields = ('username','userpassword','avatar',)
