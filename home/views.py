@@ -98,7 +98,7 @@ def thread_view(request, post_id):
     return render(request,"home/threadpage.html", contextCategory)
 
 #a different sign in form
-@login_required
+#@login_required
 def home(request):
     context = contextDefault.copy()
     title = 'Please Log in'
@@ -107,6 +107,7 @@ def home(request):
 
 
 #signing in an existing user
+
 @watch_login
 def signlog_in(request):
     if request.user.is_authenticated():
