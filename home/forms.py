@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm, Textarea, PasswordInput
-from forums.models import forumPost, user, thread
+from forums.models import forumPost, user, thread, forumSubCategory
 from django.utils.translation import ugettext_lazy as _
 from captcha.fields import CaptchaField
 from django.core.files.images import get_image_dimensions
@@ -75,6 +75,7 @@ class Signupform(forms.ModelForm):
     class Meta:
         model = user
         fields = ('username','userpassword','avatar',)
+
 
 
 class ReplyForm(forms.ModelForm):

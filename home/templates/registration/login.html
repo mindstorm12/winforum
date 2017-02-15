@@ -2,11 +2,12 @@
     {% block content %}
 <p></p>
 <h1>Please login</h1>
+<div class="panel panel-default">
      <form action="/login/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
                 {{ form.as_p }}
             <input type="submit" value="Submit" />
      </form>
-
+</div>
     {% endblock %}
 

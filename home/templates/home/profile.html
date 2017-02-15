@@ -2,10 +2,18 @@
 
 {% block content %}
     <h1>{{ title }}</h1>
+    <div class="panel panel-default">
+
     <ul>
         <li>Username: {{ username }}</li>
 
         <li>Avatar: <img src="{{ avatar }}" width = "240" alt="My image" /></li>
 
-    </ul>
+        <li>Email: {{ email }}</li>
+        <li>Date of birth: {{ dob }}</li>
+        <li>Edit Password:  <form method="get" action="{% url 'change_password' %}">
+                            <button type="submit"
+                            class="btn btn-default">Edit</button></form></li>
+
+    </ul></div>
 {% endblock %}

@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^logout/$', views.log_out, name='log_out'),
     url(r'^searchpage/$', views.post_search, name='post_search'),
     url(r'^profile/$', views.profile_view, name='profile_view'),
+    url(r'^password/$', views.change_password, name='change_password'),
 
 
 

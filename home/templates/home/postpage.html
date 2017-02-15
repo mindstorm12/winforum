@@ -14,7 +14,11 @@
 
             {% if user.is_authenticated %}
                 {% if user == q.idUser %}
-
+                            {% if q.is_edited %}
+                                <p>
+                                    This is an edited post
+                                </p>
+                            {% endif %}
                             <a class="btn btn-default" href="{% url 'post_edit' pk=q.pk %}">Edit Post</a>
                 {% endif %}
             {% endif %}

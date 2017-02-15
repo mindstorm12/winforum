@@ -5,12 +5,17 @@
 <p>{{ mainPost.content_text }}</p>
 
  {% if threadList %}
-        <ul>
+        <ul class="list-group">
         {% for q in threadList %}
 
-            <li>
-                <img src="{{ q.idUser.user.avatar.url }}" width = "240" alt="My image" />
+            <li class="list-group-item">
+                {% if q.idUser.user.avatar_is_active %}
+                <img src="{{ q.idUser.user.avatar.url }}" width = "100" alt="My image" />
+                {% else %}
+                <img src="My image" width = "100" alt="My image" />
+                {% endif %}
                 |{{ q.idUser.username }} : {{ q.content_text }}
+                <p></p>
             </li>
 
         {% endfor %}

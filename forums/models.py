@@ -36,6 +36,7 @@ class user(models.Model):
     useremail = models.EmailField('E-mail', null=True)
 
     avatar = models.ImageField(upload_to= 'images', null=True, blank=True)
+    avatar_is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
@@ -60,6 +61,7 @@ class forumPost(models.Model):
     title = models.CharField(max_length = 90)
     content_text = models.CharField(max_length = 500)
     date_stamp = models.DateTimeField('date published')
+    is_edited = models.BooleanField(default=False)
 
     def publish(self):
         self.date_stamp = timezone.now()

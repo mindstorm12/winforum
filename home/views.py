@@ -13,6 +13,10 @@ from django.contrib.auth import login, logout
 from axes.decorators import watch_login
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+
 forumTitleList = forumCategory.objects.all()
 forumSubCategoryList = forumSubCategory.objects.all()
 searchForm = SearchForm()
@@ -210,15 +214,14 @@ def post_new(request):
 #list of posts that can be edited
 def post_edit(request, pk):
 
-
     post = get_object_or_404(forumPost, pk=pk)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.is_edited = True
             post.publish()
-            post.edited = True
             return redirect('post_list')
     else:
         form = PostForm(instance=post)
@@ -257,8 +260,28 @@ def profile_view(request):
         return redirect('signlog_in')
 
     context = contextDefault.copy()
-    context.update({'username': request.user, 'avatar':request.user.user.avatar.url,})
+    context.update({'username': request.user, 'avatar':request.user.user.avatar.url, 'email':request.user.user.useremail
+    ,'dob':request.user.user.userDob,})
     return render(request, "home/profile.html", context)
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'home/password_edit.html', {
+        'form': form
+    })
+
+
+
 
 
 
