@@ -79,8 +79,8 @@ def thread_view(request, post_id):
 
     threadList = thread.objects.filter(idForumPost__id = post_id)
     paginator = Paginator(threadList, 10)  # Show 5 threadposts per page
-
     page = request.GET.get('page')
+
     try:
         threads = paginator.page(page)
     except PageNotAnInteger:
@@ -105,6 +105,20 @@ def thread_view(request, post_id):
         threadreply.idUser = request.user
         threadreply.publish()
         threadreply.save()
+        form=ReplyForm()
+
+    threadList = thread.objects.filter(idForumPost__id=post_id)
+    paginator = Paginator(threadList, 10)  # Show 5 threadposts per page
+    page = request.GET.get('page')
+
+    try:
+        threads = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        threads = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        threads = paginator.page(paginator.num_pages)
 
 
     contextCategory.update({'threadList' : threads,
