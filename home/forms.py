@@ -42,7 +42,7 @@ class Signupform(forms.ModelForm):
             w, h = get_image_dimensions(avatar)
 
             # validate dimensions
-            max_width = max_height = 512
+            max_width = max_height = 4096
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
                     u'Please use an image that is '
