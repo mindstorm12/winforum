@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^home/', include('home.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^captcha/', include('captcha.urls')),
+    url(r'^messages/', include('django_messages.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

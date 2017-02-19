@@ -114,7 +114,10 @@ Facebook share stuff trial ends
 
                 </form>
                 <div class="top-menu">
-                    <a href="{% url 'profile_view' %}">Welcome {{ request.user }}!
+                    {% if user.user.avatar_is_active %}
+                        <img src="{{ user.user.avatar.url }}" width = "25" alt="My image" />
+                    {% endif %}
+                        <a href="{% url 'profile_view' %}" class="overflow-300">Welcome {{ request.user }}!
 
                     </a>
                 </div>

@@ -4,6 +4,21 @@
 <h2>{{ mainPost.title }}</h2>
 <p>{{ mainPost.content_text }}</p>
 
+        <div class="pagination">
+    <span class="step-links">
+        {% if threadList.has_previous %}
+            <a href="?page={{ threadList.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ threadList.number }} of {{ threadList.paginator.num_pages }}.
+        </span>
+
+        {% if threadList.has_next %}
+            <a href="?page={{ threadList.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
  {% if threadList %}
         <ul class="list-group">
         {% for q in threadList %}
@@ -24,6 +39,23 @@
         {% else %}
         <p>No replies yet</p>
         {% endif %}
+
+        <div class="pagination">
+    <span class="step-links">
+        {% if threadList.has_previous %}
+            <a href="?page={{ threadList.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ threadList.number }} of {{ threadList.paginator.num_pages }}.
+        </span>
+
+        {% if threadList.has_next %}
+            <a href="?page={{ threadList.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
         {% if user.is_authenticated %}
         <form method="POST" class="post-form">
             {% csrf_token %}
