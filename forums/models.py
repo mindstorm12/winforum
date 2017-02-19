@@ -35,7 +35,7 @@ class user(models.Model):
     userDob = models.DateTimeField('date of birth', null=True)
     useremail = models.EmailField('E-mail', null=True)
 
-    avatar = models.ImageField(upload_to= 'images', null=True, blank=True, default="default/default_et.jpg")
+    avatar = models.ImageField(upload_to= 'images', null=True, blank=True, default="images/default_et.jpg")
     avatar_is_active = models.BooleanField(default=True)
 
     def __str__(self):
