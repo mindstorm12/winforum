@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'captcha',
     'axes',
-    'django_messages',
+
 ]
 
 SITE_ID = 1
