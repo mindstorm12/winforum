@@ -4,7 +4,7 @@ from .models import forumPost, user, thread, forumCategory, forumSubCategory,for
 
 
 class forumSubCategoryAdmin(admin.ModelAdmin):
-    fields = ('idForumCategory',)
+    fields = ('idForumCategory','title',)
     list_display = ('title','idForumCategory',)
 
 admin.site.register(forumPost)
