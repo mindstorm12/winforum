@@ -81,6 +81,9 @@ class Signupform(forms.ModelForm):
     class Meta:
         model = user
         fields = ('username','userpassword','avatar',)
+        widgets = {
+            'userpassword': forms.PasswordInput(),
+        }
 
 
 

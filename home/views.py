@@ -214,7 +214,7 @@ def sign_up(request):
     context = contextDefault.copy()
     title = 'Please sign up using the form below'
     context.update({'title': title, 'form': form})
-    return render(request, 'home/post_edit.html', context)
+    return render(request, 'home/signup.html', context)
 
 def post_new_cat(request):
 
