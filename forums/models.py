@@ -41,7 +41,7 @@ class user(models.Model):
     def __str__(self):
         return self.username
 
-#cleaned up usermodel
+#cleaned up usermodel/ not in use
 class forum_user(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

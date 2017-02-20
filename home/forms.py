@@ -153,4 +153,7 @@ class Edit_form(forms.ModelForm):
     #avatar = clean_avatar()
     class Meta:
         model = user
-        fields = ('avatar',)
+        fields = ('avatar','userDob', 'useremail',)
+        widgets = {
+            'userDob':forms.DateInput(),
+        }
