@@ -5,7 +5,7 @@ from forums.models import forumCategory, forumPost, forumSubCategory,thread, use
 
 from django.views.decorators.csrf import requires_csrf_token
 
-from home.forms import UserNameForm, PostForm, Signupform, ReplyForm, SearchForm, Edit_form
+from home.forms import UserNameForm, PostForm, Signupform, ReplyForm, SearchForm, Edit_form, PostCategoryForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -216,13 +216,47 @@ def sign_up(request):
     context.update({'title': title, 'form': form})
     return render(request, 'home/post_edit.html', context)
 
+def post_new_cat(request):
+
+    if not request.user.is_authenticated():
+        return redirect('signlog_in')
+
+    current_user = request.user
+    if request.method == "POST":
+        form = PostCategoryForm(request.POST)
+
+    else:
+        form = PostCategoryForm()
+
+    if form.is_valid():
+        post_cat = form.save(commit=False)
+        return post_new(request, post_cat.pk)
+
+    context = contextDefault.copy()
+    title = 'Add new Post'
+    context.update({'title': title, 'form': form})
+    return render(request, 'home/post_cat_select.html', context)
+
 #adding a new post view
-def post_new(request):
+def post_new(request, pk):
+
     if not request.user.is_authenticated():
         return redirect('signlog_in')
 
 
     current_user = request.user
+    post_subcats = forumSubCategory.objects.filter(idForumCategory_id = pk)
+
+    context = contextDefault.copy()
+    title = 'Add new Post'
+    context.update({'title': title, 'post_subcats':post_subcats})
+    return render(request, 'home/post_edit.html', context)
+
+def post_new_thread(request, pk):
+
+    if not request.user.is_authenticated():
+        return redirect('signlog_in')
+
     if request.method == "POST":
         form = PostForm(request.POST)
 
@@ -231,14 +265,16 @@ def post_new(request):
 
     if form.is_valid():
         post = form.save(commit=False)
-        post.idUser = User.objects.get(username=current_user.username)
+        post.idUser = User.objects.get(username=request.user.username)
+        post.forumSubCategory = forumSubCategory.objects.get(pk=pk)
         post.publish()
         post.save()
         return redirect('index')
     context = contextDefault.copy()
     title = 'Add new Post'
     context.update({'title': title, 'form': form})
-    return render(request, 'home/post_edit.html', context)
+    return render(request, 'home/post_new.html', context)
+
 
 #list of posts that can be edited
 def post_edit(request, pk):

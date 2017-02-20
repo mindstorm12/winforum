@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm, Textarea, PasswordInput
-from forums.models import forumPost, user, thread, forumSubCategory
+from forums.models import forumPost, user, thread, forumSubCategory, forumCategory
 from django.utils.translation import ugettext_lazy as _
 from captcha.fields import CaptchaField
 from django.core.files.images import get_image_dimensions
@@ -15,12 +15,18 @@ class UserNameForm(forms.ModelForm):
         model = user
         fields = ('username','userpassword')
 
+class PostCategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = forumCategory
+        fields = ('title',)
+
 
 class PostForm(forms.ModelForm):
 
     class Meta:
         model = forumPost
-        fields = ('forumSubCategory','title', 'content_text',)
+        fields = ('title', 'content_text',)
         widgets = {
             'content_text': Textarea(attrs={'cols': 80, 'rows': 4}),
         }

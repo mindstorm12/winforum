@@ -65,7 +65,7 @@ class forumPost(models.Model):
 
     def publish(self):
         self.date_stamp = timezone.now()
-        self.save()
+
 
     def __str__(self):
         return self.title

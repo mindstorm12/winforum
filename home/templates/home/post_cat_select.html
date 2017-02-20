@@ -4,19 +4,16 @@
     <h1>{{ title }}</h1>
     <form method="POST" class="post-form" enctype="multipart/form-data">
         {% csrf_token %}
-            <div class="btn-group">
+
+        <div class="btn-group">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Sub-Category <span class="caret"></span>
+                        Category <span class="caret"></span>
                       </button>
                     <ul class="dropdown-menu">
-                        {% for q in post_subcats%}
-                            <li><a href="{% url 'post_new_thread' q.id %}">{{ q }}</a></li>
+                        {% for q in forumTitleList%}
+                            <li><a href="{% url 'post_new' q.id %}">{{ q }}</a></li>
                         {% endfor %}
                     </ul>
-                </div>
-
-
-
-        {{ form.as_p }}
+        </div>
     </form>
 {% endblock %}

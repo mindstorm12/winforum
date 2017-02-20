@@ -11,7 +11,11 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, name="home"),
     #url(r'^login/$', views.signlog_in, name='signlog_in'),
     url(r'^post_list/$', views.post_list, name='post_list'),
-    url(r'^post/new/$', views.post_new, name='post_new'),
+    url(r'^post/cat/$', views.post_new_cat, name='post_new_cat'),
+
+    url(r'^post/(?P<pk>[0-9]+)/cat/$', views.post_new_thread, name='post_new_thread'),
+
+    url(r'^post/(?P<pk>\d+)/new/$', views.post_new, name='post_new'),
     url(r'^post/(?P<pk>\d+)/edit/$', views.post_edit, name='post_edit'),
     url(r'^signin/$', views.sign_up, name='sign_up'),
     url(r'^logout/$', views.log_out, name='log_out'),
