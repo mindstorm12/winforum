@@ -137,16 +137,16 @@ USE_TZ = True
 #uncomment these lines for debugging
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 #static structure for website in production,
-STATIC_ROOT = "/home/mindstorm/winforum/static"
+#STATIC_ROOT = '/home/mindstorm/winforum/static/'
 # or, eg,
 #STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 #user uploaded media will be saved here
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 #profile images will be stored here
