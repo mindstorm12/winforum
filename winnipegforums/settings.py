@@ -25,7 +25,7 @@ SECRET_KEY = '+terybt$c)%qbky61&^9go92!o&(%!v9*z%+og!+1w8g5=+)58'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['mindstorm.pythonanywhere.com','www.winnipegforums.com',]
+ALLOWED_HOSTS = ['mindstorm.pythonanywhere.com','www.winnipegforums.com','*']
 
 
 # Application definition
@@ -152,6 +152,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #profile images will be stored here
 USER_IMAGE_PATH = '/site_media/user_data/images/'
 AXES_COOLOFF_TIME = .083
+AXES_USE_USER_AGENT = True
+
 
 #changing login redirect URL
 LOGIN_REDIRECT_URL = 'index'
