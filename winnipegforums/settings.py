@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+terybt$c)%qbky61&^9go92!o&(%!v9*z%+og!+1w8g5=+)58'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['mindstorm.pythonanywhere.com','www.winnipegforums.com',]
 
@@ -134,8 +134,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+#uncomment these lines for debugging
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+#static structure for website in production,
+STATIC_ROOT = "/home/mindstorm/winforum/static"
+# or, eg,
+#STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 #user uploaded media will be saved here
 MEDIA_URL = '/media/'
